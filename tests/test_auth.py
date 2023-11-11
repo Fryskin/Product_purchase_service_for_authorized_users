@@ -30,4 +30,3 @@ def test_register():
     })
 
     assert response.status_code == 201
-
