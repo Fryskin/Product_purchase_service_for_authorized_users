@@ -19,12 +19,12 @@ def get_email_template_dashboard(user: User = Depends(current_user)):
     email = EmailMessage()
     email['Subject'] = 'Password confirmation'
     email['From'] = SMTP_USER
-    email['To'] = 'gman247@mail.ru'
+    email['To'] = user.email
 
     email.set_content(
         '<div>'
         f'<h1 style="color: red;">Здравствуйте,'
-        f' {user.username}, Вы успешно зарегистрированы 😊</h1>'
+        f' {user.username}, Вы успешно внесли изменения в продукт или удалили его😊</h1>'
         '</div>',
         subtype='html'
     )

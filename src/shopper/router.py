@@ -10,7 +10,7 @@ from src.auth.models import User
 from src.database import get_async_session
 from src.shopper.models import product
 from src.shopper.schemas import ProductCreate, ProductUpdate
-
+from src.tasks.router import get_dashboard_report
 
 router = APIRouter(
     prefix="/products",
@@ -36,7 +36,8 @@ async def get_all_products(limit: int = 10,
 @router.post("/create")
 async def add_product(new_product: ProductCreate,
                       session: AsyncSession = Depends(get_async_session),
-                      user: User = Depends(current_user)):
+                      user: User = Depends(current_user)
+                      ):
     if user.active is False:
         return {"code": 401, "message": "Unauthorized"}
 
@@ -51,13 +52,14 @@ async def add_product(new_product: ProductCreate,
 async def update_product(product_id: int,
                          new_stmt: ProductUpdate,
                          session: AsyncSession = Depends(get_async_session),
-                         user: User = Depends(current_user)):
+                         user: User = Depends(current_user)
+                         ):
     if user.active is False:
         return {"code": 401, "message": "Unauthorized"}
 
     stmt = update(product).values(**new_stmt.dict()).\
         where(product.c.id == product_id)
-
+    get_dashboard_report()
     await session.execute(stmt)
     await session.commit()
 
@@ -69,12 +71,14 @@ async def update_product(product_id: int,
 #                          session: AsyncSession = Depends(get_async_session)):
 async def delete_product(product_id: int,
                          session: AsyncSession = Depends(get_async_session),
-                         user: User = Depends(current_user)):
+                         user: User = Depends(current_user)
+                         ):
 
     if user.active is False:
         return {"code": 401, "message": "Unauthorized"}
 
     stmt = delete(product).where(product.c.id == product_id)
+    get_dashboard_report()
     await session.execute(stmt)
     await session.commit()
 
