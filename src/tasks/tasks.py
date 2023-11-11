@@ -23,7 +23,8 @@ def get_email_template_dashboard(user: User = Depends(current_user)):
 
     email.set_content(
         '<div>'
-        f'<h1 style="color: red;">Здравствуйте, {user.username}, Вы успешно зарегистрированы 😊</h1>'
+        f'<h1 style="color: red;">Здравствуйте,'
+        f' {user.username}, Вы успешно зарегистрированы 😊</h1>'
         '</div>',
         subtype='html'
     )

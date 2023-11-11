@@ -20,7 +20,9 @@ router = APIRouter(
 
 @router.get("/retrieve")
 @cache(expire=600)
-async def get_all_products(limit: int = 10, offset: int = 0, session: AsyncSession = Depends(get_async_session),
+async def get_all_products(limit: int = 10,
+                           offset: int = 0,
+                           session: AsyncSession = Depends(get_async_session),
                            user: User = Depends(current_user)):
     if user.active is False:
         return {"code": 401, "message": "Unauthorized"}
@@ -32,7 +34,8 @@ async def get_all_products(limit: int = 10, offset: int = 0, session: AsyncSessi
 
 
 @router.post("/create")
-async def add_product(new_product: ProductCreate, session: AsyncSession = Depends(get_async_session),
+async def add_product(new_product: ProductCreate,
+                      session: AsyncSession = Depends(get_async_session),
                       user: User = Depends(current_user)):
     if user.active is False:
         return {"code": 401, "message": "Unauthorized"}
@@ -45,12 +48,16 @@ async def add_product(new_product: ProductCreate, session: AsyncSession = Depend
 
 
 @router.put("/update")
-async def update_product(product_id: int, new_stmt: ProductUpdate, session: AsyncSession = Depends(get_async_session),
+async def update_product(product_id: int,
+                         new_stmt: ProductUpdate,
+                         session: AsyncSession = Depends(get_async_session),
                          user: User = Depends(current_user)):
     if user.active is False:
         return {"code": 401, "message": "Unauthorized"}
 
-    stmt = update(product).values(**new_stmt.dict()).where(product.c.id == product_id)
+    stmt = update(product).values(**new_stmt.dict()).\
+        where(product.c.id == product_id)
+
     await session.execute(stmt)
     await session.commit()
 
@@ -58,8 +65,10 @@ async def update_product(product_id: int, new_stmt: ProductUpdate, session: Asyn
 
 
 @router.delete("/delete")
-# async def delete_product(product_id: int, session: AsyncSession = Depends(get_async_session)):
-async def delete_product(product_id: int, session: AsyncSession = Depends(get_async_session),
+# async def delete_product(product_id: int,
+#                          session: AsyncSession = Depends(get_async_session)):
+async def delete_product(product_id: int,
+                         session: AsyncSession = Depends(get_async_session),
                          user: User = Depends(current_user)):
 
     if user.active is False:
@@ -70,7 +79,3 @@ async def delete_product(product_id: int, session: AsyncSession = Depends(get_as
     await session.commit()
 
     return {"status": "The product was successfully deleted"}
-
-
-
-

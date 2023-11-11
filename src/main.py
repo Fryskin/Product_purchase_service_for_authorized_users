@@ -4,10 +4,8 @@ from fastapi_cache.backends.redis import RedisBackend
 import aioredis
 from src.auth.base_config import auth_backend, fastapi_users
 from src.auth.router import router as router_user
-from src.database import DATABASE_URL
 from src.shopper.router import router as router_product
 from src.auth.schemas import UserRead, UserCreate
-from tortoise.contrib.fastapi import register_tortoise
 
 
 app = FastAPI(
@@ -43,7 +41,7 @@ app.include_router(router_product)
 
 @app.on_event("startup")
 async def startup_event():
-    redis = aioredis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+    redis = aioredis.from_url("redis://localhost",
+                              encoding="utf8",
+                              decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
-
-

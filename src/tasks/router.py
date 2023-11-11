@@ -16,5 +16,3 @@ def get_dashboard_report():
         "data": "Письмо отправлено",
         "details": None
     }
-
-

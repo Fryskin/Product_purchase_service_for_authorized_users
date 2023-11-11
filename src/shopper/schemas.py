@@ -16,4 +16,3 @@ class ProductUpdate(BaseModel):
     title: str
     price: int
     updated_at: datetime
-

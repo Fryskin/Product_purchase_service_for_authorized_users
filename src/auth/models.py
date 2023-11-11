@@ -4,7 +4,8 @@ from pydantic import PydanticUserError, field_validator
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 
 from pydantic import ValidationError
-from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey, JSON, Boolean
+from sqlalchemy import Table, Column, Integer, \
+    String, TIMESTAMP, ForeignKey, JSON, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 from src.database import Base
 
@@ -41,10 +42,22 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     phone_number = Column(String, nullable=True, unique=True)
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
     role_id = Column(Integer, ForeignKey(role.c.id))
-    hashed_password: Mapped[str] = mapped_column(String(length=1024), nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+    hashed_password: Mapped[str] = mapped_column(String(
+                                                 length=1024),
+                                                 nullable=False)
+
+    is_active: Mapped[bool] = mapped_column(Boolean,
+                                            default=True,
+                                            nullable=False)
+
+    is_superuser: Mapped[bool] = mapped_column(Boolean,
+                                               default=False,
+                                               nullable=False)
+
+    is_verified: Mapped[bool] = mapped_column(Boolean,
+                                              default=False,
+                                              nullable=False)
 
     try:
         @field_validator('phone_number')
@@ -52,7 +65,8 @@ class User(SQLAlchemyBaseUserTable[int], Base):
             min_phone_length = 9
             max_phone_length = 16
             first_char = '+'
-            if values[0] == first_char and min_phone_length <= len(values) <= max_phone_length:
+            if values[0] == first_char and\
+                    min_phone_length <= len(values) <= max_phone_length:
                 return f'Phone number: {values}'
 
             else:
@@ -60,6 +74,3 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 
     except PydanticUserError as exc_info:
         assert exc_info.code == 'validator-instance-method'
-
-
-

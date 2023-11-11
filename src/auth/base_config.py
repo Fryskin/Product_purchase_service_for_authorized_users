@@ -32,7 +32,3 @@ router = APIRouter(
     prefix="/products",
     tags=["Product"]
 )
-
-
-
-

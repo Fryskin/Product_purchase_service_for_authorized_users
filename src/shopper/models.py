@@ -13,6 +13,3 @@ product = Table(
     Column("updated_at", TIMESTAMP, default=datetime.utcnow),
     Column("is_active", Boolean, default=True),
 )
-
-
-
